@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Josefa</title>
+    
+    <!-- Cargamos Tailwind CSS para el diseño rápido y bonito -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Cargamos unas fuentes elegantes de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <!-- Estilos personalizados para animaciones y tipografías -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Animación suave de aparición (Fade In) */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Ocultar inicialmente el texto de la frase */
+        .hidden-quote {
+            opacity: 0;
+        }
+    </style>
+</head>
+<!-- Fondo con un gradiente cálido en tonos pastel -->
+<body class="bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Pantalla de Bloqueo (Contraseña) -->
+    <div id="pantallaBloqueo" class="bg-white/70 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-lg w-full text-center border border-white/50 transition-opacity duration-500">
+        <div class="flex justify-center mb-6 text-rose-300">
+            <!-- Ícono de candado -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+        </div>
+        <h2 class="text-2xl font-serif-elegant text-gray-800 mb-4">Solo para alguien especial</h2>
+        <p class="text-gray-500 mb-6 text-sm">Ingresa la palabra mágica para descubrir tu sorpresa.</p>
+        
+        <input type="password" id="inputClave" placeholder="Palabra mágica..." class="w-full px-4 py-3 rounded-xl border-2 border-rose-100 focus:border-rose-300 focus:outline-none focus:ring-0 text-center text-gray-700 font-medium mb-2 shadow-sm transition-all duration-300">
+        
+        <!-- Mensaje de error oculto por defecto -->
+        <p id="errorClave" class="text-rose-500 text-sm font-medium mb-4 h-5 opacity-0 transition-opacity duration-300">Esa no es la palabra mágica 🤭</p>
+        
+        <button id="btnEntrar" class="bg-rose-400 hover:bg-rose-500 text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-rose-400/50 transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 w-full sm:w-auto">
+            Entrar
+        </button>
+    </div>
+
+    <!-- Contenedor principal estilo tarjeta (Oculto inicialmente) -->
+    <div id="contenidoPrincipal" class="hidden opacity-0 bg-white/70 backdrop-blur-md rounded-3xl shadow-xl p-8 md:p-12 max-w-lg w-full text-center border border-white/50 transition-opacity duration-500">
+        
+        <!-- Ícono decorativo o detalle floral simple usando SVG -->
+        <div class="flex justify-center mb-6 text-rose-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-serif-elegant text-gray-800 mb-2">¡Hola, Josefa!</h1>
+        <p class="text-gray-500 mb-8 text-sm md:text-base">He preparado un pequeño detalle para ti.</p>
+
+        <!-- Botón interactivo -->
+        <button 
+            id="btnFrase" 
+            class="bg-rose-400 hover:bg-rose-500 text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-rose-400/50 transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 w-full sm:w-auto"
+        >
+            Necesito una frase ✨
+        </button>
+
+        <!-- Contenedor donde aparecerá la frase -->
+        <div class="mt-10 min-h-[120px] flex items-center justify-center">
+            <p id="textoFrase" class="text-xl md:text-2xl font-serif-elegant text-gray-700 italic hidden-quote leading-relaxed px-4">
+                <!-- La frase aparecerá aquí -->
+            </p>
+        </div>
+    </div>
+
+    <!-- Lógica de JavaScript -->
+    <script>
+        // Lista de frases motivadoras y bonitas
+        const frases = [
+            "Eres capaz de lograr cosas increíbles, nunca dudes de tu magia.",
+            "Tu luz brilla fuerte, incluso en los días más nublados, Josefa.",
+            "Cada pequeño paso que das te acerca a esos sueños gigantes que tienes.",
+            "El mundo es un lugar mucho más bonito porque tú estás en él.",
+            "No hay límite para lo que puedes lograr con esa fuerza interior tuya.",
+            "Confía en ti misma; tienes una valentía y un corazón maravillosos.",
+            "Que hoy te pase de todo, y que todo sea bonito. Te lo mereces.",
+            "Recuerda que eres única, valiosa y profundamente especial."
+        ];
+
+        // Referencias a los elementos del DOM (Nuevos y antiguos)
+        const pantallaBloqueo = document.getElementById('pantallaBloqueo');
+        const contenidoPrincipal = document.getElementById('contenidoPrincipal');
+        const inputClave = document.getElementById('inputClave');
+        const btnEntrar = document.getElementById('btnEntrar');
+        const errorClave = document.getElementById('errorClave');
+        
+        const boton = document.getElementById('btnFrase');
+        const textoFrase = document.getElementById('textoFrase');
+
+        // Lógica para validar la "contraseña"
+        const verificarClave = () => {
+            // Convertimos a minúsculas y quitamos espacios extra para evitar errores tontos
+            const claveIngresada = inputClave.value.trim().toLowerCase();
+            
+            if (claveIngresada === 'josefita') {
+                // Si es correcto, desvanecemos la pantalla de bloqueo
+                pantallaBloqueo.classList.add('opacity-0');
+                
+                // Esperamos que termine la transición y mostramos el contenido principal
+                setTimeout(() => {
+                    pantallaBloqueo.classList.add('hidden');
+                    contenidoPrincipal.classList.remove('hidden');
+                    
+                    // Pequeño delay para que la transición de aparición se note
+                    setTimeout(() => {
+                        contenidoPrincipal.classList.remove('opacity-0');
+                    }, 50);
+                }, 500);
+            } else {
+                // Si es incorrecto, mostramos el error
+                errorClave.classList.remove('opacity-0');
+                inputClave.classList.add('border-rose-400');
+                
+                // Efecto de que se borre el error al volver a escribir
+                inputClave.addEventListener('input', () => {
+                    errorClave.classList.add('opacity-0');
+                    inputClave.classList.remove('border-rose-400');
+                }, { once: true });
+            }
+        };
+
+        // Escuchar el clic en el botón "Entrar"
+        btnEntrar.addEventListener('click', verificarClave);
+
+        // Permitir usar la tecla "Enter" para entrar
+        inputClave.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                verificarClave();
+            }
+        });
+
+        // Función que se ejecuta al hacer clic en el botón de la frase
+        boton.addEventListener('click', () => {
+            // Seleccionar una frase aleatoria
+            const indiceAleatorio = Math.floor(Math.random() * frases.length);
+            const fraseSeleccionada = frases[indiceAleatorio];
+
+            // Quitar clases de animación anteriores para poder repetirla
+            textoFrase.classList.remove('animate-fade-in');
+            
+            // Forzar un "reflow" para que el navegador reinicie la animación
+            void textoFrase.offsetWidth; 
+
+            // Asignar el nuevo texto y aplicar la animación
+            textoFrase.textContent = `"${fraseSeleccionada}"`;
+            textoFrase.classList.remove('hidden-quote');
+            textoFrase.classList.add('animate-fade-in');
+            
+            // Un pequeño detalle: cambiar sutilmente el texto del botón tras el primer clic
+            if(boton.textContent.trim() === "Necesito una frase ✨") {
+                boton.textContent = "Quiero otra frase 💖";
+            }
+        });
+    </script>
+</body>
+</html>
